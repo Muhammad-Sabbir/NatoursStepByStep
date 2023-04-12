@@ -1,8 +1,6 @@
 const fs = require('fs');
 const express = require('express');
-
 const app = express();
-
 app.use(express.json());
 const port = 3000;
 const tours = JSON.parse(
@@ -19,6 +17,7 @@ app.get('/api/v1/tours/:id', (req, res) => {
   const id = parseInt(req.params.id); // another tricks in js is to convert a string to a number
   //that req.params.id *1 means if a string is multiple by a integer, it will be converted to a number
   const tour = tours.find((tour) => tour.id === id);
+
   // if (id > tours.length) {
   if (!tour) {
     return res.status(400).json({
@@ -51,8 +50,24 @@ app.post('/api/v1/tours', (req, res) => {
     }
   );
 });
+
 app.post('/', (req, res) => {
   res.send('You can post to this end point');
+});
+
+app.patch('/api/v1/tours/:id', (req, res) => {
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: '<Updated tour here...>',
+    },
+  });
 });
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

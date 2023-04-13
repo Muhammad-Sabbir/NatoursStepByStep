@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 06: ExpressLetsStartBuildingtheNatoursAPI>> Lecture 09: HandlingPATCHRequests"
+git commit -m "Chapter 06: ExpressLetsStartBuildingtheNatoursAPI>> Lecture 10: HandlingDELETERequests"
 git push -u origin main
 
 

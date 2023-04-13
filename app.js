@@ -1,16 +1,32 @@
 const fs = require('fs');
 const express = require('express');
+const morgan = require('morgan');
+const { application } = require('express');
 const app = express();
-app.use(express.json());
 const port = 3000;
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
+// 1. middlewares
+app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log('Hello from the middleware!👌');
+  next();
+});
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
+// 2. route handlers
 const getAllTours = (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'success', results: tours.length, data: { tours } });
+  res.status(200).json({
+    status: 'success',
+    requestedAt: req.requestTime,
+    results: tours.length,
+    data: { tours },
+  });
 };
 const getTour = (req, res) => {
   console.log(req.params);
@@ -75,19 +91,7 @@ const deleteTour = (req, res) => {
     data: null,
   });
 };
-// // example 1:
-// app.get('/api/v1/tours', getAllTours);
-
-// app.post('/api/v1/tours', createTour);
-
-// app.get('/api/v1/tours/:id', getTour);
-
-// app.patch('/api/v1/tours/:id', updateTour);
-
-// app.delete('/api/v1/tours/:id', deleteTour);
-
-// example 2:
-
+// 3. routes
 app.route('/api/v1/tours').get(getAllTours).post(createTour);
 app
   .route('/api/v1/tours/:id')
@@ -95,6 +99,7 @@ app
   .patch(updateTour)
   .delete(deleteTour);
 
+//4. start servers
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

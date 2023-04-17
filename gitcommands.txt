@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 06: ExpressLetsStartBuildingtheNatoursAPI>> Lecture 19: ChainingMultipleMiddlewareFunctions"
+git commit -m "Chapter 06: ExpressLetsStartBuildingtheNatoursAPI>> Lecture 20: ServingStaticFiles"
 git push -u origin main
 
 

@@ -1,6 +1,8 @@
 const dotenv = require('dotenv');
-dotenv.config({ path: './config.env' });
 const app = require('./app');
+
+dotenv.config({ path: './config.env' });
+
 // console.log(app.get('env')); // these are global variables
 // console.log(process.env);
 const port = 3000 || process.env.PORT;

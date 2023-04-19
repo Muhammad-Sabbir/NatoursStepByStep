@@ -1,47 +1,11 @@
-// // example: 1;
-// const mongoose = require('mongoose');
-// const dotenv = require('dotenv');
-// const app = require('./app');
-
-// dotenv.config({ path: './config.env' });
-
-// // console.log(app.get('env')); // these are global variables
-// // console.log(process.env);
-
-// const DB = process.env.DATABASE.replace(
-//   '<PASSWORD>',
-//   process.env.DATABASE_PASSWORD
-// );
-
-// mongoose
-//   .set('strictQuery', false)
-//   .connect(DB, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   })
-//   .then((con) => {
-//     console.log(con.connections);
-//     console.log('DB connection successful!');
-//   });
-
-// // Connect to local Server
-// // mongoose
-// //   .set('strictQuery', false)
-// //   .connect('mongodb://localhost:27017/test')
-// //   .then(() => console.log('Connected!'));
-
-// const port = 3000 || process.env.PORT;
-// app.listen(port, () => {
-//   console.log(`Server listening on port ${port}`);
-// });
-// //power shell commands 'set NODE_ENV=development;node server.js'
-
-// example: 2; connect to local server
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const app = require('./app');
 
 dotenv.config({ path: './config.env' });
+
+// console.log(app.get('env')); // these are global variables
+// console.log(process.env);
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -50,14 +14,20 @@ const DB = process.env.DATABASE.replace(
 
 mongoose
   .set('strictQuery', false)
-  .connect(process.env.DATABASE_LOCAL, {
+  .connect(DB, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then((con) => {
-    console.log(con.connections); // it could be commented
+    // console.log(con.connections);
     console.log('DB connection successful!');
   });
+
+// Connect to local Server
+// mongoose
+//   .set('strictQuery', false)
+//   .connect('mongodb://localhost:27017/test')
+//   .then(() => console.log('Connected!'));
 
 const port = 3000 || process.env.PORT;
 app.listen(port, () => {

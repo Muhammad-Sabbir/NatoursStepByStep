@@ -9,10 +9,10 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 08: UsingMongoDBwithMongoose>> Lecture 2: ConnectingOurDatabasewiththeExpressApp"
+git commit -m "Chapter 08: UsingMongoDBwithMongoose>> Lecture 7: RefactoringforMVC"
 git push -u origin main
 
 
-…or import code from another repository
+…or   import code from another repository
 You can initialize this repository with code from a Subversion, Mercurial, or TFS project.
 

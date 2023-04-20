@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 08: UsingMongoDBwithMongoose>> Lecture 7: RefactoringforMVC"
+git commit -m "Chapter 08: UsingMongoDBwithMongoose>> Lecture 8: AnotherWayofCreatingDocumentsPostRequest"
 git push -u origin main
 
 

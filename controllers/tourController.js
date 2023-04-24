@@ -1,23 +1,35 @@
-const Tour = require('./../models/tourModel');
+const Tour = require('../models/tourModel');
 
-exports.getAllTours = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime,
-    // results: tours.length,
-    // data: { tours },
-  });
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+    res.status(200).json({
+      status: 'success',
+      requestedAt: req.requestTime,
+      results: tours.length,
+      data: { tours },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
 };
-exports.getTour = (req, res) => {
-  console.log(req.params);
-  const id = parseInt(req.params.id); // another tricks in js is to convert a string to a number
-  //that req.params.id *1 means if a string is multiple by a integer, it will be converted to a number
-  // const tour = tours.find((tour) => tour.id === id);
-
-  // res.status(200).json({
-  //   status: 'success',
-  //   data: { tour },
-  // });
+exports.getTour = async (req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
+    // Tour.findOne({_ID:req.params.id})
+    res.status(200).json({
+      status: 'success',
+      data: { tour },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
 };
 exports.createTour = async (req, res) => {
   try {

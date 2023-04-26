@@ -23,12 +23,6 @@ mongoose
     console.log('DB connection successful!');
   });
 
-// Connect to local Server
-// mongoose
-//   .set('strictQuery', false)
-//   .connect('mongodb://localhost:27017/test')
-//   .then(() => console.log('Connected!'));
-
 const port = 3000 || process.env.PORT;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

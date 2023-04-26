@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const app = require('./app');
 
 dotenv.config({ path: './config.env' });
+const app = require('./app');
 
 // console.log(app.get('env')); // these are global variables
 // console.log(process.env);

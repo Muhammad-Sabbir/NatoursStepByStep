@@ -2,7 +2,34 @@ const Tour = require('../models/tourModel');
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // BUILD QUERY
+    // const query = await Tour.find();
+
+    // Example:1 One way to find element from FileSystem.
+    // const query = await Tour.find({
+    //   difficulty: 'easy',
+    //   duration: 5,
+    // });
+
+    // Example:2 Two ways to find element from FileSystem
+    // const query = await Tour.find()
+    //   .where('difficulty')
+    //   .equals('easy')
+    //   .where('duration')
+    //   .equals(5);
+
+    // Now we will use example 1
+    const queryObj = { ...req.query }; // three dot structuring an object shallow copy here
+    const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    excludedFields.forEach((el) => delete queryObj[el]);
+    console.log(req.query, queryObj);
+    const query = Tour.find(queryObj);
+    // threr are some special query string that will be used to find or for paginations and not actually query into the database. So we will have to specifi these special query string saperately.
+
+    // EXECUTE QUERY
+    const tours = await query;
+
+    // SEND RESPONSE
     res.status(200).json({
       status: 'success',
       requestedAt: req.requestTime,

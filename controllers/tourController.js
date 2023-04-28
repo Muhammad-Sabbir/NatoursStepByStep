@@ -3,19 +3,35 @@ const Tour = require('../models/tourModel');
 exports.getAllTours = async (req, res) => {
   try {
     // BUILD QUERY
-    // 1) Filtering
+    // 1A) Filtering
     const queryObj = { ...req.query }; // three dot structuring an object shallow copy here
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
     // threr are some special query string that will be used to find or for paginations and not actually query into the database. So we will have to specifi these special query string saperately.
 
-    //2) Advanced Filtering
+    //1B) Advanced Filtering
     let queryStr = JSON.stringify(queryObj);
     console.log(queryStr);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
     console.log(JSON.parse(queryStr));
 
-    const query = Tour.find(JSON.parse(queryStr));
+    let query = Tour.find(JSON.parse(queryStr));
+
+    // 2) Sorting
+    // Example -1
+    // if (req.query.sort) {
+    //   query = query.sort(req.query.sort);
+    // }
+
+    // Example -2: Multiple sorting
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      console.log(sortBy);
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('createdAt');
+    }
+
     // EXECUTE QUERY
     const tours = await query;
 

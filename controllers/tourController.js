@@ -38,8 +38,27 @@ exports.getAllTours = async (req, res) => {
     } else {
       query = query.select('-__v');
     }
+
+    //Pagination
+    const page = req.query.page * 1 || 1; // '123'*1 = 123 this is how convert a string to a number in js. and Here default page is 1.
+    const limit = req.query.limit * 1 || 100;
+
+    const skip = (page - 1) * limit;
+
+    //Example:
+    // page=3&limit=10, 1-10--> page 1, 11-20--> page 2, 21-30--> page3
+    // query = query.skip(20).limit(10);
+
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments();
+      if (skip >= numTours) throw new Error('This page does not exist');
+    }
+
     // EXECUTE QUERY
     const tours = await query;
+    //query.sort().select().skip().limit() // this is a big query. We can add multiple statements to the query
 
     // SEND RESPONSE
     res.status(200).json({

@@ -48,6 +48,7 @@ const tourSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
+    select: false, // false means we don't want to show this created field to clients
   },
   startDates: [Date],
 });

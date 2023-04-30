@@ -100,3 +100,139 @@ exports.deleteTour = async (req, res) => {
     });
   }
 };
+
+// Example:1 getToursStats
+
+// exports.getTourStats = async (req, res) => {
+//   try {
+//     // 'https://www.mongodb.com/docs/manual/reference/operator/aggregation-pipeline/'
+//     const stats = await Tour.aggregate([
+//       {
+//         $match: { ratingsAverage: { $gte: 4.5 } },
+//       },
+//       {
+//         $group: {
+//           // example:1
+//           // _id: null,
+//           // example:2
+//           // _id: '$difficulty',
+//           //example:3
+//           // _id: '$ratingsAverage',
+//           // example:4
+//           _id: { $toUpper: '$difficulty' },
+//           numTours: { $sum: 1 },
+//           numRatings: { $sum: '$ratingsQuantity' },
+//           avgRating: { $avg: '$ratingsAverage' },
+//           avgPrice: { $avg: '$price' },
+//           minPrice: { $min: '$price' },
+//           maxPrice: { $max: '$price' },
+//         },
+//       },
+//     ]);
+
+//     res.status(200).json({
+//       status: 'success',
+//       data: {
+//         stats,
+//       },
+//     });
+//   } catch (err) {
+//     res.status(400).json({
+//       status: 'error',
+//       message: err,
+//     });
+//   }
+// };
+
+// Example:2 getToursStats
+exports.getTourStats = async (req, res) => {
+  try {
+    // 'https://www.mongodb.com/docs/manual/reference/operator/aggregation-pipeline/'
+    const stats = await Tour.aggregate([
+      {
+        $match: { ratingsAverage: { $gte: 4.5 } },
+      },
+      {
+        $group: {
+          // example:1
+          // _id: null,
+          // example:2
+          // _id: '$difficulty',
+          //example:3
+          // _id: '$ratingsAverage',
+          // example:4
+          _id: { $toUpper: '$difficulty' },
+          numTours: { $sum: 1 },
+          numRatings: { $sum: '$ratingsQuantity' },
+          avgRating: { $avg: '$ratingsAverage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+      {
+        $sort: { avgPrice: 1 }, // 1 means ascending order, -1 means descending order
+      },
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        stats,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err,
+    });
+  }
+};
+
+// Example:3 getToursStats
+exports.getTourStats = async (req, res) => {
+  try {
+    // 'https://www.mongodb.com/docs/manual/reference/operator/aggregation-pipeline/'
+    const stats = await Tour.aggregate([
+      {
+        $match: { ratingsAverage: { $gte: 4.5 } },
+      },
+      {
+        $group: {
+          // example:1
+          // _id: null,
+          // example:2
+          // _id: '$difficulty',
+          //example:3
+          // _id: '$ratingsAverage',
+          // example:4
+          _id: { $toUpper: '$difficulty' },
+          numTours: { $sum: 1 },
+          numRatings: { $sum: '$ratingsQuantity' },
+          avgRating: { $avg: '$ratingsAverage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' },
+        },
+      },
+      {
+        $sort: { avgPrice: 1 }, // 1 means ascending order, -1 means descending order
+      },
+      {
+        $match: { _id: { $ne: 'EASY' } },
+      },
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        stats,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err,
+    });
+  }
+};

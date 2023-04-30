@@ -1,5 +1,10 @@
 const Tour = require('../models/tourModel');
-
+exports.aliasTopTours = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+  next();
+};
 exports.getAllTours = async (req, res) => {
   try {
     // BUILD QUERY
@@ -7,7 +12,7 @@ exports.getAllTours = async (req, res) => {
     const queryObj = { ...req.query }; // three dot structuring an object shallow copy here
     const excludedFields = ['page', 'sort', 'limit', 'fields'];
     excludedFields.forEach((el) => delete queryObj[el]);
-    // threr are some special query string that will be used to find or for paginations and not actually query into the database. So we will have to specifi these special query string saperately.
+    // there are some special query string that will be used to find or for paginations and not actually query into the database. So we will have to specifi these special query string saperately.
 
     //1B) Advanced Filtering
     let queryStr = JSON.stringify(queryObj);

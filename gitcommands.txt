@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 08: UsingMongoDBwithMongoose>> Lecture 22: AggregationPipelineUnwindingandProjecting"
+git commit -m "Chapter 08: UsingMongoDBwithMongoose>> Lecture 23: VirtualProperties"
 git push -u origin main
 
 

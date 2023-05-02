@@ -153,10 +153,23 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
-// this middleware is gonna run after the query is executed
+// this query middleware is gonna run after the query is executed
 tourSchema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds`);
-  console.log(docs);
+  // console.log(docs);
+  next();
+});
+
+// AGGREGATION MIDDLEWARE
+// // Example-1:
+// tourSchema.pre('aggregate', function (next) {
+//   console.log(this);
+//   next();
+// });
+// Example-2:
+tourSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  console.log(this.pipeline());
   next();
 });
 

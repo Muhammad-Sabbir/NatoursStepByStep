@@ -56,6 +56,10 @@ const tourSchema = new mongoose.Schema(
       select: false, // false means we don't want to show this created field to clients
     },
     startDates: [Date],
+    secretTour: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -115,6 +119,45 @@ tourSchema.pre('save', function (next) {
   // this is the first pre middleware
   this.slug = slugify(this.name, { lower: true });
   next(); // because this is a middleware, so next()
+});
+
+// let's now add a pre-find hook, so basically, a middleware that is gonna run before any find query is executed.
+// QUERY MIDDLEWARE
+// SECRET EXAMPLES, FOR SPECIAL PEOPLE OR CUSTOMER. we never want the secret tours to show up in any query
+// example-1: this will not work because we set findByone in route.
+// tourSchema.pre('find', function (next) {
+//   this.find({ secretTour: { $ne: true } });
+//   next();
+// });
+
+// example:2 this will work only in findbyOne route.
+// tourSchema.pre('findOne', function (next) {
+//   this.find({ secretTour: { $ne: true } });
+//   next();
+// });
+
+// // example:3 this will work in containing find in route
+// tourSchema.pre(/^find/, function (next) {
+//   // read the docs of middleware in mongoose
+//   this.find({ secretTour: { $ne: true } });
+//   next();
+// });
+
+// example:4 this will work in containing find in route
+// let's create a kind off clock to measure how long it takes to execute the current query.
+
+tourSchema.pre(/^find/, function (next) {
+  // read the docs of middleware in mongoose
+  this.find({ secretTour: { $ne: true } });
+  this.start = Date.now();
+  next();
+});
+
+// this middleware is gonna run after the query is executed
+tourSchema.post(/^find/, function (docs, next) {
+  console.log(`Query took ${Date.now() - this.start} milliseconds`);
+  console.log(docs);
+  next();
 });
 
 const Tour = mongoose.model('Tour', tourSchema); // First letter of model variable name must be capital letter. here Tour, T is in capital letter.

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-
+const validator = require('validator');
 // const opts = { toObject: { virtuals: true } };
 const tourSchema = new mongoose.Schema(
   {
@@ -11,6 +11,7 @@ const tourSchema = new mongoose.Schema(
       trim: true,
       maxlength: [40, 'A tour must have less or equal then 40 characters'],
       minlength: [10, 'A tour must have more or equal then 10 characters'],
+      // validate: [validator.isAlpha, 'Tour name must only contain characters'], // demonstrates purpose.
     },
     slug: String,
     duration: {
@@ -43,7 +44,17 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'A tour must have a price'],
     },
-    priceDiscount: Number,
+    // Custom validator lecture 8.28
+    priceDiscount: {
+      type: Number,
+      validate: {
+        validator: function (val) {
+          // this only points to current doc on NEW document creation and not in update!!
+          return val < this.price;
+        },
+        message: 'Discount price ({VALUE}) should be below regular price',
+      },
+    },
     summary: {
       type: String,
       trim: true, // all whitespace will remove this
@@ -79,7 +90,7 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7; // here we use function instead of arrow function, becused arrow function does not support this keyword // fuck this line, cause this line takes my extra 1 hour!!! shittttttttttt
 });
 
-// DOCUMENT MIDDLEWARE: rund before .save() and .create()
+// DOCUMENT MIDDLEWARE: rund before .save() and .create() //// this only points to current doc on NEW document creation and not in update!!
 //Example-1:
 // tourSchema.pre('save', function () {
 //   console.log(this);

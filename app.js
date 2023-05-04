@@ -26,9 +26,22 @@ app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {
   // this block must be after all routs.
-  res.status(404).json({
-    status: 'fail',
-    message: `Can't find ${req.originalUrl} on this server!`,
+  // res.status(404).json({
+  //   status: 'fail',
+  //   message: `Can't find ${req.originalUrl} on this server!`,
+  // });
+  const err = new Error(`Can't find ${req.originalUrl} on this server`);
+  err.status = 'fail';
+  err.statusCode = 404;
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  //default error status code
+  err.statusCode = err.statusCode || 500; //which mean internal server error
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
   });
 });
 

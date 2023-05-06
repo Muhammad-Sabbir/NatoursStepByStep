@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 09: ErrorHandlingwithExpress>> Lecture 05:ImplementingaGlobalErrorHandlingMiddleware"
+git commit -m "Chapter 09: ErrorHandlingwithExpress>> Lecture 06:BetterErrorsandRefactoring"
 git push -u origin main
 
 

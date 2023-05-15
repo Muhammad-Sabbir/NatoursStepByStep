@@ -1,23 +1,29 @@
-const mongoose = require('mongoose');
 const AppError = require('../utils/appError');
 
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}`;
   return new AppError(message, 400);
 };
+
+const handleDuplicateFieldsDB = (err) => {
+  const message = `Duplicate field value:"${err.keyValue.name}". Please use another value!`;
+  return new AppError(message, 400);
+};
+
 const sendErrorDev = (err, res) => {
-  if (err.name === 'CastError') {
-    let error = { ...err };
-    error = handleCastErrorDB(error);
-    res.status(error.statusCode).json({
-      status: error.status,
-      error: error,
-      message: error.message,
-      stack: error.stack,
-    });
-  }
-  console.log(err.name);
-  console.log(err.isOperational);
+  // if (err.name === 'CastError') {
+  //   let error = { ...err };
+  //   error = handleCastErrorDB(error);
+  //   res.status(error.statusCode).json({
+  //     status: error.status,
+  //     error: error,
+  //     message: error.message,
+  //     stack: error.stack,
+  //   });
+  // }
+  // console.log(err.name);
+  // console.log(err.isOperational);
+
   res.status(err.statusCode).json({
     status: err.status,
     error: err,
@@ -28,9 +34,6 @@ const sendErrorDev = (err, res) => {
 
 const sendErrorProd = (err, res) => {
   // Operational, trusted error: send messsage to client.
-  console.log(err.isOperational);
-  console.log(err.name);
-  console.log(123456789);
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
@@ -41,11 +44,12 @@ const sendErrorProd = (err, res) => {
   else {
     //1) Log error
     console.error('ERROR 🙈');
-    console.log(err.isOperational);
     //2) Send generic message
     res.status(500).json({
       status: 'error',
       message: 'Something went very wrong',
+      // stack: err.stack,
+      error: err,
     });
   }
 };
@@ -58,17 +62,14 @@ module.exports = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500; //which mean internal server error
   err.status = err.status || 'error';
   if (process.env.NODE_ENV === 'development') {
+    console.log(err.message);
     sendErrorDev(err, res);
   }
   if (process.env.NODE_ENV === 'production') {
     // eslint-disable-next-line node/no-unsupported-features/es-syntax
     let error = { ...err };
-    console.log('ljsdlfjlsdflsfdjlskdfjlsdfjlsjdfl;');
-    console.log(error);
-
-    console.log('ljsdlfjlsdflsfdjlskdfjlsdfjlsjdfl;');
     if (error.CastError) error = handleCastErrorDB(error);
-
+    if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     sendErrorProd(error, res);
   }
 };

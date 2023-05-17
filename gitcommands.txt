@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 09: ErrorHandlingwithExpress>> Lecture 10: 11.HandlingDuplicateDatabaseFields"
+git commit -m "Chapter 09: ErrorHandlingwithExpress>> Lecture 10: 12.PasswordResetFunctionalityResetToken"
 git push -u origin main
 
 

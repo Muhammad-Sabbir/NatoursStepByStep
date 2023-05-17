@@ -9,7 +9,17 @@ const handleDuplicateFieldsDB = (err) => {
   const message = `Duplicate field value:"${err.keyValue.name}". Please use another value!`;
   return new AppError(message, 400);
 };
+const handleValidatorErrorDB = (err) => {
+  const errors = Object.values(err.errors).map((el) => el.message);
+  console.log(errors);
+  const message = `Invalid inpur data. ${errors.join('. ')}`;
+  return new AppError(message, 400);
+};
 
+const handleJWTError = () =>
+  new AppError('Invalid token. Please log in again!', 401);
+const handleJWTExpiredError = () =>
+  new AppError('Your token has expired! Please log in again!', 401);
 const sendErrorDev = (err, res) => {
   // if (err.name === 'CastError') {
   //   let error = { ...err };
@@ -57,8 +67,6 @@ const sendErrorProd = (err, res) => {
 module.exports = (err, req, res, next) => {
   // console.log(err.stack); // actualy will show us where the error happened
   //default error status code
-
-  console.log('errorController.js 42');
   err.statusCode = err.statusCode || 500; //which mean internal server error
   err.status = err.status || 'error';
   if (process.env.NODE_ENV === 'development') {
@@ -70,6 +78,10 @@ module.exports = (err, req, res, next) => {
     let error = { ...err };
     if (error.CastError) error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
+    if (error?.errors?.name?.name === 'ValidatorError')
+      error = handleValidatorErrorDB(error);
+    if (error.name === 'JsonWebTokenError') error = handleJWTError();
+    if (error.name === 'TokenExpiredError') error = handleJWTExpiredError();
     sendErrorProd(error, res);
   }
 };

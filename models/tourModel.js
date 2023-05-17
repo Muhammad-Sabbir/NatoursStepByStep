@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const validator = require('validator');
+// const validator = require('validator');
 // const opts = { toObject: { virtuals: true } };
 const tourSchema = new mongoose.Schema(
   {
@@ -8,7 +8,7 @@ const tourSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A tour must have a name'],
       unique: true,
-      trim: true,
+      trim: true, //white spaces will be removed from both sides of the string
       maxlength: [40, 'A tour must have less or equal then 40 characters'],
       minlength: [10, 'A tour must have more or equal then 10 characters'],
       // validate: [validator.isAlpha, 'Tour name must only contain characters'], // demonstrates purpose.

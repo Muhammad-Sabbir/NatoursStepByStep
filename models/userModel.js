@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please provide your email'],
     unique: true,
     lowercase: true,
-    validator: [validator.isEmaiil, 'Please provide a valide email'],
+    validate: [validator.isEmail, 'Please provide a valide email'],
   },
   photo: {
     type: String,
@@ -45,6 +45,12 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
+  // 17. Deleting the Current User
+  active: {
+    type: Boolean,
+    default: true,
+    select: false, // this will not show in the output or client side
+  }, // we want to hide this field to the user
 });
 //password save encription
 // we will use pre-save middleware, so basically document middleware
@@ -63,6 +69,14 @@ userSchema.pre('save', async function (next) {
 userSchema.pre('save', function (next) {
   if (!this.isModified('password') || this.isNew) return next();
   this.passwordChangedAt = Date.now() - 1000; // some time jwt is created a bit before the changed password timestamp that is why we substract 1000 milliseconds. this is a little hack but this not the problem
+  next();
+});
+
+//17. Deleting the Current User
+userSchema.pre(/^find/, function (next) {
+  // here ^find will not only match with the find but also findAll, findOne, findTwo etc.
+  //this points to the current query
+  this.find({ active: { $ne: false } });
   next();
 });
 

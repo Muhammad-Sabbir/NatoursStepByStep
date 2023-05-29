@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 10: AuthenticationAuthorizationandSecurity>> Lecture 19: SendingJWTviaCookie"
+git commit -m "Chapter 10: AuthenticationAuthorizationandSecurity>> Lecture 20: ImplementingRateLimiting"
 git push -u origin main
 
 

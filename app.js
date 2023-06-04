@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet'); // https://github.com/helmetjs/helmet
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -39,6 +40,21 @@ app.use(mongoSanitize()); // QUERY_SANITIZATION
 
 // Data sanitization against XSS
 app.use(xss()); // if any attacker inject some html file with JS code then this will converting all these HTML Symbols
+
+// Prevent parameter pollution
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingsQuantity',
+      'ratingsAverage',
+      'maxGroupSize',
+      'difficulty',
+      'price',
+    ],
+  }) // we can make this list from data model to make it dynamic, but to make this simple we write this like thisway
+);
+
 //Serving static files
 app.use(express.static(`${__dirname}/public`));
 

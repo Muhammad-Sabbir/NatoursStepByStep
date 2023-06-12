@@ -1,10 +1,5 @@
 const express = require('express');
 const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet'); // https://github.com/helmetjs/helmet
-const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss-clean');
-const hpp = require('hpp');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -14,54 +9,16 @@ const userRouter = require('./routes/userRoutes');
 // const { application } = require('express');
 const app = express();
 
-// 1. Global middlewares
-// Set security HTTP headers
-app.use(helmet());
+// 1. middlewares
 console.log(process.env.NODE_ENV);
-
-// Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
-// Limit requests from same API
-const limiter = rateLimit({
-  max: 100,
-  windowMs: 60 * 60 * 1000,
-  message: 'Too many requests from this IP, please try again in an hour!',
-});
-app.use('/api', limiter);
-
-// Body parser, reading data from body int req.body
-app.use(express.json({ limit: '10kb' })); // the package will then understand it will parse this string here into a meaningful data, and so now when we have a body larger than 10 kilobyte it will not be accepted
-
-// Data sanitization against NoSQL query injection
-app.use(mongoSanitize()); // QUERY_SANITIZATION
-
-// Data sanitization against XSS
-app.use(xss()); // if any attacker inject some html file with JS code then this will converting all these HTML Symbols
-
-// Prevent parameter pollution
-app.use(
-  hpp({
-    whitelist: [
-      'duration',
-      'ratingsQuantity',
-      'ratingsAverage',
-      'maxGroupSize',
-      'difficulty',
-      'price',
-    ],
-  }) // we can make this list from data model to make it dynamic, but to make this simple we write this like thisway
-);
-
-//Serving static files
+app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
-// Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.headers);
   next();
 });
 

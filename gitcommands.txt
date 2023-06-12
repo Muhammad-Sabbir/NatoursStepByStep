@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 11: ModellingDataandAdvancedMongoose>> Lecture 04: ModellingLocations(Geospatial Data)"
+git commit -m "Chapter 11: ModellingDataandAdvancedMongoose>> Lecture 06: SigningupUsers"
 git push -u origin main
 
 

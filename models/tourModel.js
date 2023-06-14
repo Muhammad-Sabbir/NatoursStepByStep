@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+// const User = require('./userModel'); // // for tour guides embeding
 // const validator = require('validator');
 // const opts = { toObject: { virtuals: true } };
 const tourSchema = new mongoose.Schema(
@@ -79,6 +80,38 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    startLocation: {
+      //GeoJSON
+      type: {
+        type: String,
+        default: 'Point',
+        enum: ['Point'],
+      },
+      coordinates: [Number],
+      address: String,
+      description: String,
+    },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
+    // guides: Array, // for tour guides embeding
+    guides: [
+      // this guides field only contains the reference.
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     toJSON: { virtuals: true },
@@ -140,6 +173,13 @@ tourSchema.pre('save', function (next) {
   next(); // because this is a middleware, so next()
 });
 
+// Example: For Tour guide embeding
+// tourSchema.pre('save', async function (next) {
+//   const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+//   this.guides = await Promise.all(guidesPromises);
+//   next();
+// });
+
 // let's now add a pre-find hook, so basically, a middleware that is gonna run before any find query is executed.
 // QUERY MIDDLEWARE
 // SECRET EXAMPLES, FOR SPECIAL PEOPLE OR CUSTOMER. we never want the secret tours to show up in any query
@@ -172,6 +212,13 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
+tourSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt',
+  });
+  next();
+});
 // this query middleware is gonna run after the query is executed
 tourSchema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds`);

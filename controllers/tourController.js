@@ -3,6 +3,7 @@ const Tour = require('../models/tourModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+// const { resetPassword } = require('./authController');
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -30,6 +31,15 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   });
 });
 exports.getTour = catchAsync(async (req, res, next) => {
+  // Ex01: This will show the __V AND changed resetPassword.
+  // const tour = await Tour.findById(req.params.id).populate('guides'); // with populate this gonna fill it up with the actual data, the data will show only in query not in actually database.
+  //Ex02: Instead of this process we will use query middleware. this is a nice trick from the documents.
+  // const tour = await Tour.findById(req.params.id).populate({
+  //   path: 'guides',
+  //   select: '-__v -passwordChangedAt',
+  // }); // requested url is: {{URL}}api/v1/tours/63dfc64c6d9c29d6687816fc
+
+  // Ex03: by using middleware
   const tour = await Tour.findById(req.params.id);
   // Tour.findOne({_ID:req.params.id})
   console.log(typeof tour);

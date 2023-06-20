@@ -1,14 +1,14 @@
 // review // rating //createdAt / ref to tour / ref to user
 const mongoose = require('mongoose');
 
-const reviewSchema = new Schema(
+const reviewSchema = new mongoose.Schema(
   {
     review: {
       type: String,
       required: [true, 'Review cannot be empty!'],
       trim: true,
       maxlength: [200, 'A tour must have less or equal then 200 characters'],
-      minlength: [10, 'A tour must have more or equal then 10 characters'],
+      minlength: [5, 'A tour must have more or equal then 5 characters'],
     },
     rating: {
       type: Number,

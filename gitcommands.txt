@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 11: ModellingDataandAdvancedMongoose>> Lecture 09: CreatingandGettingReviews"
+git commit -m "Chapter 11: ModellingDataandAdvancedMongoose>> Lecture 10: PopulatingReviews"
 git push -u origin main
 
 

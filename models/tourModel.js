@@ -112,6 +112,13 @@ const tourSchema = new mongoose.Schema(
         ref: 'User',
       },
     ],
+    // here tour referencing the review, but we will do it by virtual populate
+    // reviews: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'Review',
+    //   },
+    // ],
   },
   {
     toJSON: { virtuals: true },
@@ -121,6 +128,14 @@ const tourSchema = new mongoose.Schema(
 
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7; // here we use function instead of arrow function, becused arrow function does not support this keyword // fuck this line, cause this line takes my extra 1 hour!!! shittttttttttt
+});
+
+//Virtual populate
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour', // In our reviewModel.js file, we have field called tour and this where the ID of the tour is being stored, and that's why here, in this foreign field we specify that name of that field in oder to connect these two models.
+  localField: '_id',
+  // so lets do that populate actually right in the controller, so the tourController.js and where we have getTour we need to add the populate after the query, and need to pass the name of the field 'reviews' that we want to populate.
 });
 
 // DOCUMENT MIDDLEWARE: rund before .save() and .create() //// this only points to current doc on NEW document creation and not in update!!

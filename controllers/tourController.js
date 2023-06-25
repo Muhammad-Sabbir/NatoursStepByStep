@@ -40,7 +40,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
   // }); // requested url is: {{URL}}api/v1/tours/63dfc64c6d9c29d6687816fc
 
   // Ex03: by using middleware
-  const tour = await Tour.findById(req.params.id);
+  const tour = await Tour.findById(req.params.id).populate('reviews');
   // Tour.findOne({_ID:req.params.id})
   console.log(typeof tour);
   console.log('hello');

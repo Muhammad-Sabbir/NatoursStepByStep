@@ -1,12 +1,26 @@
 const express = require('express');
 const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
-const reviewController = require('../controllers/reviewController');
+const reviewRouter = require('./reviewRoutes');
 
 const router = express.Router();
 
 // router.param('id', tourController.checkID);
 // router.param('', tourController.checkBody);
+
+// POST /tour/4u5u5u/reviews
+//GET /tour/4u5u5u/reviews
+//GET /tour/4u5u5u/reviews/RU5U58T
+
+// router
+//   .route('/:tourId/reviews')
+//   .post(
+//     authController.protect,
+//     authController.restrictTo('user'),
+//     reviewController.createReview
+//   );
+
+router.use('/:tourId/reviews', reviewRouter); // This is a mongoose feature. router itself is really just a middleware. so we can use the method on it. and then say that for this specific route here we want to use the reviewRouter instead. this is actually a router. we did the same thing inside the app.js file.
 
 router
   .route('/top-5-cheap')
@@ -29,17 +43,5 @@ router
     authController.restrictTo('admin', 'lead-guide'),
     tourController.deleteTour
   ); // Protect: if a user is logged in..// restrictTo: authorization
-
-// POST /tour/4u5u5u/reviews
-//GET /tour/4u5u5u/reviews
-//GET /tour/4u5u5u/reviews/RU5U58T
-
-router
-  .route('/:tourId/reviews')
-  .post(
-    authController.protect,
-    authController.restrictTo('user'),
-    reviewController.createReview
-  );
 
 module.exports = router;

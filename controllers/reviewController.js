@@ -6,26 +6,22 @@
 // create some new reviews
 // and also retrieve them from the database using get all reviews.
 const Review = require('../models/reviewModel');
-const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
+  let filter = {};
+  if (req.params.tourId) filter = { tour: req.params.tourId };
+
   // EXECUTE QUERY
-  const reviews = new APIFeatures(Review.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const review = await reviews.query;
+  const reviews = await Review.find(filter);
+
   //query.sort().select().skip().limit() // this is a big query. We can add multiple statements to the query
 
   // SEND RESPONSE
   res.status(200).json({
     status: 'success',
-    requestedAt: req.requestTime,
-    results: review.length,
-    data: { review },
+    results: reviews.length,
+    data: { reviews },
   });
 });
 

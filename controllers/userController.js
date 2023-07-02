@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 // eslint-disable-next-line import/no-unresolved
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const factory = require('./handlerFactory');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -83,8 +84,4 @@ exports.updateUser = (req, res) => {
     .status(500)
     .json({ status: 'error', message: 'This route is not yet defined.' });
 };
-exports.deleteUser = (req, res) => {
-  res
-    .status(500)
-    .json({ status: 'error', message: 'This route is not yet defined.' });
-};
+exports.deleteUser = factory.deleteOne(User); // Now only the administrator should later be able to actually delete users because remember that when the user deletes himself, then they will not actually get deleted but only active be set to false. (see exports.deleteMe). But the administrator on the other hand is really gonna be able to delete the user effectively from the database.

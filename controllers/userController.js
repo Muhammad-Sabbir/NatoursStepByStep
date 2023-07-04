@@ -12,20 +12,6 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-  //We donst want to send the password to the client
-  //query.sort().select().skip().limit() // this is a big query. We can add multiple statements to the query
-
-  // SEND RESPONSE
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime,
-    results: users.length,
-    data: { users },
-  });
-});
-
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) Create error if user POSTs password data.
   if (req.body.password || req.body.passwordConfirm) {
@@ -69,16 +55,16 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getUser = (req, res) => {
-  res
-    .status(500)
-    .json({ status: 'error', message: 'This route is not yet defined.' });
-};
 exports.createUser = (req, res) => {
-  res
-    .status(500)
-    .json({ status: 'error', message: 'This route is not yet defined.' });
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not defined. Please use /signup instead',
+  });
 };
+
+exports.getUser = factory.getOne(User);
+exports.getAllUsers = factory.getAll(User);
+
 // do not update passwords with this.
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User); // Now only the administrator should later be able to actually delete users because remember that when the user deletes himself, then they will not actually get deleted but only active be set to false. (see exports.deleteMe). But the administrator on the other hand is really gonna be able to delete the user effectively from the database.

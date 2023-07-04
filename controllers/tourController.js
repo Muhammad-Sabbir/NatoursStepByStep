@@ -1,9 +1,8 @@
 const Tour = require('../models/tourModel');
 // eslint-disable-next-line import/no-unresolved
-const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
+// const AppError = require('../utils/appError');
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -12,64 +11,11 @@ exports.aliasTopTours = (req, res, next) => {
   next();
 };
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  // EXECUTE QUERY
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const tours = await features.query;
-  //query.sort().select().skip().limit() // this is a big query. We can add multiple statements to the query
-
-  // SEND RESPONSE
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime,
-    results: tours.length,
-    data: { tours },
-  });
-});
-exports.getTour = catchAsync(async (req, res, next) => {
-  // Ex01: This will show the __V AND changed resetPassword.
-  // const tour = await Tour.findById(req.params.id).populate('guides'); // with populate this gonna fill it up with the actual data, the data will show only in query not in actually database.
-  //Ex02: Instead of this process we will use query middleware. this is a nice trick from the documents.
-  // const tour = await Tour.findById(req.params.id).populate({
-  //   path: 'guides',
-  //   select: '-__v -passwordChangedAt',
-  // }); // requested url is: {{URL}}api/v1/tours/63dfc64c6d9c29d6687816fc
-
-  // Ex03: by using middleware
-  const tour = await Tour.findById(req.params.id).populate('reviews');
-  // Tour.findOne({_ID:req.params.id})
-  console.log(typeof tour);
-  console.log('hello');
-  if (tour === undefined) {
-    console.log(tour);
-    return next(new AppError('No tour found with that ID', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: { tour },
-  });
-});
-
+exports.getAllTours = factory.getAll(Tour);
+exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 exports.createTour = factory.createOne(Tour);
 exports.updateTour = factory.updateOne(Tour);
-
 exports.deleteTour = factory.deleteOne(Tour);
-
-// exports.deleteTour = catchAsync(async (req, res, next) => {
-//   const tour = await Tour.findByIdAndDelete(req.params.id);
-//   if (!tour) {
-//     return next(new AppError('No tour found with that ID', 404));
-//   }
-//   res.status(204).json({
-//     status: 'success',
-//     data: null,
-//   });
-// });
 
 exports.getTourStats = catchAsync(async (req, res, next) => {
   // 'https://www.mongodb.com/docs/manual/reference/operator/aggregation-pipeline/'

@@ -6,25 +6,8 @@
 // create some new reviews
 // and also retrieve them from the database using get all reviews.
 const Review = require('../models/reviewModel');
-const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
-
-exports.getAllReviews = catchAsync(async (req, res, next) => {
-  let filter = {};
-  if (req.params.tourId) filter = { tour: req.params.tourId };
-
-  // EXECUTE QUERY
-  const reviews = await Review.find(filter);
-
-  //query.sort().select().skip().limit() // this is a big query. We can add multiple statements to the query
-
-  // SEND RESPONSE
-  res.status(200).json({
-    status: 'success',
-    results: reviews.length,
-    data: { reviews },
-  });
-});
+// const catchAsync = require('../utils/catchAsync'); //We just comment it and keep this here because who knows maybe in the future we are gonna need it for some other Middleware function here.
 
 exports.setTourUserIds = (req, res, next) => {
   // Allow nested routes
@@ -33,7 +16,8 @@ exports.setTourUserIds = (req, res, next) => {
   next();
 };
 
+exports.getAllReviews = factory.getAll(Review);
+exports.getReview = factory.getOne(Review);
 exports.createReview = factory.createOne(Review);
-
 exports.updateReview = factory.updateOne(Review);
 exports.deleteReview = factory.deleteOne(Review);

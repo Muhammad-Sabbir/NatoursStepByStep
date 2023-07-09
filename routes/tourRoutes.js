@@ -28,16 +28,31 @@ router
 
 router.route('/tour-stats').get(tourController.getTourStats);
 // we want to pass a parameter name year that is why we added the :year on the url
-router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
+router
+  .route('/monthly-plan/:year')
+  .get(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide', 'guide'),
+    tourController.getMonthlyPlan
+  );
 
 router
   .route('/')
-  .get(authController.protect, tourController.getAllTours)
-  .post(tourController.createTour);
+  // .get(authController.protect, tourController.getAllTours)
+  .get(tourController.getAllTours) // // We might want to allow other travel site to embeded our tours into theid own website. And so that's what this API is basically for, and so therefor we will not have any authorization on get tour requests. We want to expose this part of the API to everyone.
+  .post(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    tourController.createTour
+  ); // the actions of creating or editing tours, we only want to allow lead guides and administrators to perform these actions, so ofcourse no normal users and also no normal guides. just admin and lead guides.
 router
   .route('/:id')
   .get(tourController.getTour)
-  .patch(tourController.updateTour)
+  .patch(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    tourController.updateTour
+  )
   .delete(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide'),

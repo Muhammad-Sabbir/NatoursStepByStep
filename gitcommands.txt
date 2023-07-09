@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 11: ModellingDataandAdvancedMongoose>> Lecture 18: Adding-a-meEndpoint"
+git commit -m "Chapter 11: ModellingDataandAdvancedMongoose>> Lecture 19: AddingMissingAuthenticationandAuthorization"
 git push -u origin main
 
 

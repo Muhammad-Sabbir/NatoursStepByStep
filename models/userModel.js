@@ -52,6 +52,7 @@ const userSchema = new mongoose.Schema({
     select: false, // this will not show in the output or client side
   }, // we want to hide this field to the user
 });
+////////////////////////////// if we want to upload users data directly from file to database then we need the comment this below pre middleware///////////
 //password save encription
 // we will use pre-save middleware, so basically document middleware
 userSchema.pre('save', async function (next) {
@@ -71,6 +72,8 @@ userSchema.pre('save', function (next) {
   this.passwordChangedAt = Date.now() - 1000; // some time jwt is created a bit before the changed password timestamp that is why we substract 1000 milliseconds. this is a little hack but this not the problem
   next();
 });
+
+////////////////////////////// if we want to upload users data directly from file to database then we need the comment this upper pre middleware///////////
 
 //17. Deleting the Current User
 userSchema.pre(/^find/, function (next) {

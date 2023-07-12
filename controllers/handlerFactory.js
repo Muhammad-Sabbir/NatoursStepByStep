@@ -80,9 +80,11 @@ exports.getAll = (Model) =>
       .sort()
       .limitFields()
       .paginate();
-    const doc = await features.query;
+    //   // example01: using explain();
+    // const doc = await features.query.explain(); //"totalDocsExamined": 9, // "totalDocsExamined": 3,
     //query.sort().select().skip().limit() // this is a big query. We can add multiple statements to the query
-
+    // example 02: remove explain();
+    const doc = await features.query;
     // SEND RESPONSE
     res.status(200).json({
       status: 'success',

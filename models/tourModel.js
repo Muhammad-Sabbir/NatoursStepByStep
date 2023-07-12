@@ -126,6 +126,13 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
+// Example 01: only price.
+//tourSchema.index({ price: 1 }); // We can set here 1 or -1, one means that we're sorting the price index in an ascending order. and for -1 viseversa // "totalDocsExamined": 3,
+
+// Example 02:  price and ratingsAverage.
+tourSchema.index({ price: 1, ratingsAverage: -1 });
+tourSchema.index({ slug: 1 });
+
 tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7; // here we use function instead of arrow function, becused arrow function does not support this keyword // fuck this line, cause this line takes my extra 1 hour!!! shittttttttttt
 });

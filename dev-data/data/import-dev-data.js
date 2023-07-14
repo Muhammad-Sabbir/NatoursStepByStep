@@ -34,7 +34,7 @@ const importData = async () => {
   try {
     await Tour.create(tours);
     await Review.create(reviews);
-    await User.create(users, { validateBeforeSave: false }); // all of the validation in the model will basically just skipped
+    await User.create(users, { validateBeforeSave: false }); // { validateBeforeSave: false } all of the validation in the model will basically just skipped
     console.log('Data successfully loaded!');
   } catch (err) {
     console.log(err);

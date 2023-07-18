@@ -37,6 +37,12 @@ router
   );
 
 router
+  .route('/tours-within/:distance/center/:latlng/unit/:unit')
+  .get(tourController.getToursWithin);
+// /tours-within?distance=233&center=-40,45&unit=mi
+// /tours-within/233/center/-40,45/unit/mi
+
+router
   .route('/')
   // .get(authController.protect, tourController.getAllTours)
   .get(tourController.getAllTours) // // We might want to allow other travel site to embeded our tours into theid own website. And so that's what this API is basically for, and so therefor we will not have any authorization on get tour requests. We want to expose this part of the API to everyone.

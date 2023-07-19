@@ -256,12 +256,12 @@ tourSchema.post(/^find/, function (docs, next) {
 //   console.log(this);
 //   next();
 // });
-// Example-2:
-tourSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
-  console.log(this.pipeline());
-  next();
-});
+// // Example-2:
+// tourSchema.pre('aggregate', function (next) {
+//   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+//   console.log(this.pipeline());
+//   next();
+// }); // this line is commented because of $geoNear is only valid as the first stage in a pipeline. error.lecture number 11. 26
 
 const Tour = mongoose.model('Tour', tourSchema); // First letter of model variable name must be capital letter. here Tour, T is in capital letter.
 module.exports = Tour;

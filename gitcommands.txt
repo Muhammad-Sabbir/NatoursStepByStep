@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 11: ModellingDataandAdvancedMongoose>> Lecture 25: GeospatialQueriesFindingToursWithinRadius"
+git commit -m "Chapter 11: ModellingDataandAdvancedMongoose>> Lecture 26: GeospatialAggregationCalculatingDistances"
 git push -u origin main
 
 

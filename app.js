@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -15,7 +16,16 @@ const reviewRouter = require('./routes/reviewRoutes');
 // const { application } = require('express');
 const app = express();
 
+// Use pug template.
+app.set('view engine', 'pug');
+
+// Set up the view engine
+app.set('views', path.join(__dirname, 'views'));
+
 // 1. Global middlewares
+//Serving static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Set security HTTP headers
 app.use(helmet());
 console.log(process.env.NODE_ENV);
@@ -56,9 +66,6 @@ app.use(
   }) // we can make this list from data model to make it dynamic, but to make this simple we write this like thisway
 );
 
-//Serving static files
-app.use(express.static(`${__dirname}/public`));
-
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
@@ -67,6 +74,9 @@ app.use((req, res, next) => {
 });
 
 // 3. routes
+app.get('/', (req, res) => {
+  res.status(200).render('base');
+});
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

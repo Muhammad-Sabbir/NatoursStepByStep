@@ -9,7 +9,7 @@ git push -u origin main
 
 
 git add --all
-git commit -m "Chapter 12: Server-SideRenderingwithPugTemplates >> Lecture 4: FirstStepswithPug"
+git commit -m "Chapter 12: Server-SideRenderingwithPugTemplates >> Lecture 5: CreatingOurBaseTemplate"
 git push -u origin main
 
 
